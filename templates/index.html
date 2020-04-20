@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title> 상품 소개페이지</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/itemPage.css') }}">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans+KR&display=swap" rel="stylesheet">
+    <!-- JQuery를 import 합니다 -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+
+<body>
+    <div class="wrap">
+        <div class="picOfproduc">
+            <img src="https://image.shutterstock.com/image-photo/red-apple-on-white-background-260nw-158989157.jpg"
+                class="rounded mx-auto d-block" alt="...">
+        </div>
+
+        <div class="infoArea">
+            <div class="titleOfproduc">
+                <h3>상품제목</span> <span class="price"> 가격: 1,000,000원 / 개 </span></h3>
+                <p> 이 상품으로 말할 것 같으면 용왕이 찾지 못한 토끼의 간을 찾아 빨간 망토의 늑대와 아기 돼지 삼형제의 숨결이 고루 녹아 있는 먹으면 120세까지 살 수 있다는 이 상품으로 말할
+                    것 같으면 용왕이 찾지 못한 토끼의 간을 찾아 빨간망토의 늑대와 아기돼지... </p>
+            </div>
+
+            <div class="oderInfo">
+                <h3>주문하기</h3>
+
+                <div class="form-group row">
+                    <label for="inputPassword" class="col-sm-2 col-form-label">주문자 성함:</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="ClientName">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputPassword" class="col-sm-2 col-form-label"> 수량:</label>
+                    <div class="col-sm-10">
+                        <select class="form-control" id="exampleFormControlSelect1">
+                            <option>1개</option>
+                            <option>2개</option>
+                            <option>3개</option>
+                            <option>4개</option>
+                            <option>5개</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputPassword" class="col-sm-2 col-form-label">주소:</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="ClientAddr">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputPassword" class="col-sm-2 col-form-label">전화번호:</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="ClientTel">
+                    </div>
+                </div>
+            </div>
+            <div class="oder_button">
+                <button type="button" class="btn btn-light" onclick="make_oder()" > 주문하기</button>
+            </div>
+        </div>
+
+    </div>
+
+
+   <script type="text/javascript">
+
+        function make_oder(){
+        location.href="checkorder";
+
+        let ClientName =$('#ClientName').val();
+        let exampleFormControlSelect1 =$('#exampleFormControlSelect1').val();
+        let ClientAddr =$('#ClientAddr').val();
+        let ClientTel =$('#ClientTel').val();
+
+        if (ClientName == '') {
+        alert("이름을적으세요")
+        $('#ClientName').val('');
+        $('#ClientName').focus();
+          }
+        else if (ClientAddr == '') {
+        alert("주소를 적으세요");
+        $('#ClientAddr').val('');
+        $('#ClientAddr').focus();
+        } else if ($.isNumeric(ClientTel) == false || ClientTel == '') {
+            alert("휴대폰 번호 입력하고 형식을 맞춰주세요 " + "\n010 0000 0000형식으로 적어주세요");
+            $('#ClientTel').focus();
+        }
+        else {
+            alert("주문이 성공적으로 이루어졌습니다.");
+            $('.form-control').val('');
+
+        }
+          $.ajax({
+                type: "POST",
+                url: "/oderlist",
+                data: { ClientName: ClientName, exampleFormControlSelect1 : exampleFormControlSelect1, ClientAddr: ClientAddr, ClientTel :ClientTel },
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        alert(response['msg']);
+                        $('#ClientName').val('');
+                        $('#exampleFormControlSelect1').val('');
+                        $('#ClientAddr').val('');
+                        $('#ClientTel').val('');
+                        window.location.reload();
+                    }
+                }
+            })
+      }
+
+
+
+    </script>
+
+</body>
+</head>
+
+</html>

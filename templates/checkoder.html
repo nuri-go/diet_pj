@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> 상품 소개페이지</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/orderTable.css')}}">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans+KR&display=swap" rel="stylesheet">
+    <!-- JQuery를 import 합니다 -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+<style>
+ .Table_show{
+ width: 900px;
+ margin: 10px 300px 10px 300px;
+ padding: 20px;
+}
+
+#order{
+ margin: 50px 0 50px 0;
+ text-align: center;
+}
+
+</style>
+<body>
+
+<div class="Table_show" >
+    <p id = "order">
+        고객 주문 리스트
+    </p>
+
+        <table class="table" >
+            <thead>
+                <tr>
+                    <td> 주문자</td>
+                    <td> 수량 </td>
+                    <td> 주소 </td>
+                    <td> 전화번호</td>
+                </tr>
+            </thead>
+            <tbody id="orderTable">
+            </tbody>
+        </table>
+</div>
+
+<script type = "text/javascript">
+        $(document).ready(function () {
+            $('#orderTable').html('');
+            listing();
+        });
+      function listing() {
+		// 1. 리뷰 목록을 서버에 요청하기
+       $.ajax({
+        type: "GET",
+        url: "/oderlist",
+        data: {},
+        success: function (response) {
+						// 2. 요청 성공 여부 확인하기
+            if (response['result'] == 'success') {
+                let review = response['oder'];
+							  // 3. 요청 성공했을 때 리뷰를 올바르게 화면에 나타내기
+                for (let i = 0; i < review.length; i++) {
+                    make_card(review[i]['user_name'], review[i]['oder_amount'], review[i]['user_address'],review[i]['user_callnumber']);
+                }
+            } else {
+                alert('데이터를 받아오지 못했습니다.');
+            }
+        }
+    })
+}
+       function make_card(user_name, oder_amount, user_address, user_callnumber) {
+            let temp_html = '<tr>\
+                                <td>'+ user_name + '</td>\
+                                <td>'+ oder_amount + '</td>\
+                                <td>'+ user_address + '</td>\
+                                 <td>'+ user_callnumber + '</td>\
+                            </tr>';
+            $('#orderTable').append(temp_html);
+        }
+
+</script>
+</body>
+</html>

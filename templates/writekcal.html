@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title> 상품 소개페이지</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='/css/style.css')}}">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans+KR&display=swap" rel="stylesheet">
+    <!-- JQuery를 import 합니다 -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+
+<body>
+    <div id = "wrap">
+
+      <div class="page-header">
+        <h1>Example page header <small>Subtext for header</small></h1>
+      </div>
+
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+              <a class="nav-link active" href="#">아침</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">점심</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">저녁</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+            </li>
+          </ul>
+          <form class="navbar-form navbar-left" role="search">
+          <div class="form-group">
+          <input type="text" class="form-control" placeholder="Search" id="foodname">
+          <button type="submit" class="btn btn-default" onclick="search_food()">Submit</button>
+        </div>
+        </form>
+          <textarea class="form-control" rows="3"></textarea>
+
+
+    </div>
+
+            <table class="table" >
+            <thead>
+                <tr>
+                    <td> 음식</td>
+
+                </tr>
+            </thead>
+            <tbody id="orderTable">
+            </tbody>
+        </table>
+
+
+<script type="text/javascript">
+        function search_food(){
+        let foodname =$('#foodname').val();
+        if (foodname == '') {
+        alert("먹은 음식을 적으세요")
+        $('#foodname').val('');
+        $('#foodname').focus();
+          }
+        $.ajax({
+        type: "GET",
+        url: "/search",
+        data: { foodname: foodname },
+        success: function (response) {
+        alert('왜안돼');
+        let food = response['foodkcal'];
+        console.log(food);
+        for (let i = 0; i < food.length; i++) {
+            make_card(food[i]['food_name'], food[i]['gram_foronetime'], food[i]['food_kcal'],food[i]['food_group']);
+        }
+        }
+         })
+}
+       function make_card(food_name, gram_foronetime, food_kcal, food_group) {
+            let temp_html = '<tr>\
+                                <td>'+ food_name + '</td>\
+                                <td>'+ gram_foronetime + '</td>\
+                                <td>'+ food_kcal + '</td>\
+                                 <td>'+ food_group + '</td>\
+                            </tr>';
+            $('#orderTable').append(temp_html);
+        }
+
+</script>
+
+
+</body>
+</head>
+
+</html>
